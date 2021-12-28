@@ -13,14 +13,10 @@ class AssetShow extends React.Component {
     this.handleAddToList = this.handleAddToList.bind(this);
     this.handleLogOut = this.handleLogOut.bind(this);
     this.handleRemoveFromList = this.handleRemoveFromList.bind(this);
-    // this.handleKeyDown = this.handleKeyDown.bind(this);
-    // this.handleClickOutside = this.handleClickOutside.bind(this);
     this.handleClickOutside_invest = this.handleClickOutside_invest.bind(this);
-    // this.showDropdown = this.showDropdown.bind(this);
     this.showDropdown2 = this.showDropdown2.bind(this);
     this.updateInvestOption = this.updateInvestOption.bind(this);
     this.handleBuy = this.handleBuy.bind(this);
-    // this.wrapperRef = React.createRef();
     this.wrapperRef_invest = React.createRef();
     this.handleBuyClick = this.handleBuyClick.bind(this);
     this.handleSellClick = this.handleSellClick.bind(this);
@@ -28,7 +24,6 @@ class AssetShow extends React.Component {
     this.handleRangeClick = this.handleRangeClick.bind(this);
     this.handleHindsight = this.handleHindsight.bind(this);
     this.renderHindsight = this.renderHindsight.bind(this);
-    // this.calculatePortfo = this.calculatePortfo.bind(this);
     this.state = {
       intraday: "",
       data: "",
@@ -371,7 +366,6 @@ class AssetShow extends React.Component {
           clickedHindsight: range,
         });
       });
-      // this.setState({ hindsight: this.maxProfit(historical[range]) });
     } else {
       this.setState({
         hindsight: this.maxProfit(
@@ -396,11 +390,9 @@ class AssetShow extends React.Component {
       ticker,
       clearHistoricalPrices,
     } = this.props;
-    // const { clickedRange } = this.state;
     if (prevProps.ticker !== this.props.ticker) {
       Promise.all([
         fetchAsset(ticker),
-        // fetchClickedRange(ticker),
         fetchIntraday(ticker),
         fetchCompanyInfo(ticker),
         fetchAssetNews(ticker),
@@ -435,7 +427,6 @@ class AssetShow extends React.Component {
     const ticker = this.props.match.params.ticker.toUpperCase();
     Promise.all([
       fetchAsset(ticker),
-      // fetchClickedRange(ticker),
       fetchIntraday(ticker),
       fetchCompanyInfo(ticker),
       fetchAssetNews(ticker),
@@ -460,13 +451,6 @@ class AssetShow extends React.Component {
     clearRating();
     this.setState({ hindsight: null });
   }
-
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   // this.forceUpdate();
-  //   // return this.props.ticker === nextProps.ticker;
-  //   // const nextTicker = window.localStorage.getItem("nextTicker")
-  //   // return this.state.loading
-  // }
 
   handleAddToList(e) {
     e.preventDefault();
@@ -549,7 +533,6 @@ class AssetShow extends React.Component {
         </div>
       );
     } else {
-      // this.setState({loading:true})
       let asset = assets[ticker];
       let stockHoldings = portfolio.holdings
         ? portfolio.holdings[asset.ticker]
@@ -928,17 +911,6 @@ class AssetShow extends React.Component {
                         )}
                       </div>
                     </section>
-                    {/* <section className="earnings-section">
-                      <div className="earnings-heading">
-                        <div className="earnings-div">
-                          <div className="earnings-div-inner">
-                            <h2 className="earnings-h2">
-                              <span>Earnings</span>
-                            </h2>
-                          </div>
-                        </div>
-                      </div>
-                    </section> */}
                     <section className='hindsight-section'>
                       <header className='hindsight-heading'>
                         <div className='hindsight-div'>
@@ -1014,42 +986,8 @@ class AssetShow extends React.Component {
                                               {this.state.investOption}
                                             </span>
                                           </div>
-                                          <div className='svg'>
-                                            {/* <svg
-                                              width="27"
-                                              height="27"
-                                              viewBox="0 0 27 27"
-                                            >
-                                              <path
-                                                fillRule="evenodd"
-                                                clipRule="evenodd"
-                                                d="M9.66675 15.3334L13.0001 19.5L16.3334 15.3334H9.66675Z"
-                                              ></path>
-                                              <path
-                                                fillRule="evenodd"
-                                                clipRule="evenodd"
-                                                d="M9.66675 11.6667L13.0001 7.5L16.3334 11.6667H9.66675Z"
-                                              ></path>
-                                            </svg> */}
-                                          </div>
                                         </div>
                                       </div>
-                                      {/* {this.state.investInDropdown ? (
-                                        <div className="invest-outer">
-                                          <div
-                                            className="shares-option"
-                                            onClick={this.updateInvestOption}
-                                          >
-                                            <span>Shares</span>
-                                          </div>
-                                          <div
-                                            className="dollars-option"
-                                            onClick={this.updateInvestOption}
-                                          >
-                                            <span>Dollars</span>
-                                          </div>
-                                        </div>
-                                      ) : null} */}
                                     </div>
                                   </div>
                                 </div>
@@ -1125,7 +1063,6 @@ class AssetShow extends React.Component {
                                           "$0,0.00"
                                         )}`}
                                   </span>
-                                  {/* <span>{this.state.estimate[this.state.investOption]}</span> */}
                                 </div>
                               </div>
                             </div>
@@ -1182,7 +1119,6 @@ class AssetShow extends React.Component {
                       </form>
                     </div>
                     <div className='sidebar-buttons'>{button}</div>
-                    {/* <Link to={`/`}>Dashboard</Link> */}
                   </div>
                 </div>
               </div>

@@ -7,7 +7,6 @@ const msp = (state) => {
   let news = state.entities.news ? state.entities.news : {};
   return {
     assetNews: Object.values(news),
-    // assetNews: state.entities.news.articles,
   };
 };
 
