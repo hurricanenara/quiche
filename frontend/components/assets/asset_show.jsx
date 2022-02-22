@@ -306,7 +306,9 @@ class AssetShow extends React.Component {
   update(field) {
     const { assets, currentUser, ticker } = this.props;
     let asset = assets[ticker];
-    let closingPrice = asset.data ? asset.data[asset.data.length - 1].close : 0;
+    let closingPrice = asset.data.length
+      ? asset.data[asset.data.length - 1].close
+      : 0;
     return (e) => {
       if (field === "Dollars") {
         this.setState({
@@ -538,7 +540,7 @@ class AssetShow extends React.Component {
         ? portfolio.holdings[asset.ticker]
         : 0;
       let rating = asset.rating ? asset.rating[0] : undefined;
-      let closingPrice = asset.data
+      let closingPrice = asset.data.length
         ? asset.data[asset.data.length - 1].close
         : 0;
       let buyingPowerAvailable = portfolio.balance.toFixed(2);

@@ -1,10 +1,10 @@
-import React from 'react';
-import WatchlistIndexContainer from '../watchlist/watchlist_index_container';
-import PortfoLineChart from '../charts/portfo_chart';
-import NavBar from '../nav_bar/nav_bar';
-import numeral from 'numeral';
-import moment from 'moment';
-import Spinner from '../ui/Spinner';
+import React from "react";
+import WatchlistIndexContainer from "../watchlist/watchlist_index_container";
+import PortfoLineChart from "../charts/portfo_chart";
+import NavBar from "../nav_bar/nav_bar";
+import numeral from "numeral";
+import moment from "moment";
+import Spinner from "../ui/Spinner";
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -29,7 +29,7 @@ class Dashboard extends React.Component {
     });
   }
 
-  mergeData(range="1D", portfoDataPoints, stockData, holdings) {
+  mergeData(range = "1D", portfoDataPoints, stockData, holdings) {
     const ownedStocks = Object.keys(holdings.holdings);
     let stockLength = stockData[ownedStocks[0]]["intraday-prices"].length;
     let portfoLength = portfoDataPoints.data.length;
@@ -47,14 +47,20 @@ class Dashboard extends React.Component {
         }
         let currentSnapshot = portfoDataPoints.data[i].holdings_snapshot; // {ticker: numberOfShares, ticker: numberofShares}
         Object.keys(currentSnapshot).forEach((ticker) => {
-          stockData[ticker]["intraday-prices"][j].close = stockData[ticker]["intraday-prices"][j].close ? stockData[ticker]["intraday-prices"][j].close : stockData[ticker]["intraday-prices"][j - 1].close
-          portfoDataPoints.data[i].cash_balance += stockData[ticker]["intraday-prices"][j].close * currentSnapshot[ticker];
-        })
+          stockData[ticker]["intraday-prices"][j].close = stockData[ticker][
+            "intraday-prices"
+          ][j].close
+            ? stockData[ticker]["intraday-prices"][j].close
+            : stockData[ticker]["intraday-prices"][j - 1].close;
+          portfoDataPoints.data[i].cash_balance +=
+            stockData[ticker]["intraday-prices"][j].close *
+            currentSnapshot[ticker];
+        });
         // for (let ticker in currentSnapshot) {
         //   currentCash += stockData.multiple[ticker][j].close * currentSnapshot[ticker];
         // }
         // historicalPortfo[i].cash_balance = currentCash;
-      })
+      });
       return portfoDataPoints.data;
     }
   }
@@ -65,34 +71,52 @@ class Dashboard extends React.Component {
     const tickersArr = Object.keys(tickers);
     if (range === "1W") range = "5DM";
     let range = e.target.textContent;
-    debugger
     if (!historicalBatch[range]) {
-      debugger
-      fetchHistoricalBatch(tickersArr, range).then(res => {
+      fetchHistoricalBatch(tickersArr, range).then((res) => {
         this.setState({
-          historicalBatch: {[range]: res.historicalBatchPrices }
+          historicalBatch: { [range]: res.historicalBatchPrices },
         });
-      })
+      });
     }
   }
 
   componentDidMount() {
-    const { portfolio, holdings, fetchAssets, fetchPortfoData, fetchPortfolioCashBalance, fetchMultipleIntraday, fetchHoldings, fetchAssetNews, portfoData, multIntraday } = this.props;
+    const {
+      portfolio,
+      holdings,
+      fetchAssets,
+      fetchPortfoData,
+      fetchPortfolioCashBalance,
+      fetchMultipleIntraday,
+      fetchHoldings,
+      fetchAssetNews,
+      portfoData,
+      multIntraday,
+    } = this.props;
     // const tickers = Object.keys(this.props.portfolio.holdings);
     Promise.all([
       fetchPortfoData(""),
       fetchHoldings(),
       fetchPortfolioCashBalance(),
       fetchAssetNews("GOOGL"),
-    ])
-    .then(res => {
+    ]).then((res) => {
       if (Object.keys(res[1].holdings.holdings).length > 0) {
-        fetchMultipleIntraday(Object.keys(res[1].holdings.holdings)).then((multRes) => {
-          let newData = this.mergeData(this.clickedRange, res[0].data, multRes.multIntraday, res[1].holdings)
-          this.setState({
-            historicalPortfo: newData
-          }, () => console.log("Hi! Welcome :-)"));
-        });
+        fetchMultipleIntraday(Object.keys(res[1].holdings.holdings)).then(
+          (multRes) => {
+            let newData = this.mergeData(
+              this.clickedRange,
+              res[0].data,
+              multRes.multIntraday,
+              res[1].holdings
+            );
+            this.setState(
+              {
+                historicalPortfo: newData,
+              },
+              () => console.log("Hi! Welcome :-)")
+            );
+          }
+        );
       } else {
         this.setState({
           loading: false,
@@ -102,47 +126,56 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { currentUser, logout, portfolio, assetNews, portfoData, multIntraday, holdings, tickers } = this.props;
+    const {
+      currentUser,
+      logout,
+      portfolio,
+      assetNews,
+      portfoData,
+      multIntraday,
+      holdings,
+      tickers,
+    } = this.props;
     const { mergedData, historicalBatch, historicalPortfo } = this.state;
     const notAllFetched = !currentUser || !portfolio || !assetNews;
     if (!currentUser || !portfolio.balance || !assetNews) {
       return (
         <div>
-          <Spinner type="Loader" />
+          <Spinner type='Loader' />
         </div>
-      )
+      );
     } else {
       let buyingPowerAvailable = portfolio.balance.toFixed(2);
-      debugger
-      let portfoValue = (historicalPortfo) ? historicalPortfo[historicalPortfo.length - 1].cash_balance.toFixed(2) : buyingPowerAvailable;
-      window.localStorage.setItem("portfoVal", (portfoValue));
+      let portfoValue = historicalPortfo
+        ? historicalPortfo[historicalPortfo.length - 1].cash_balance.toFixed(2)
+        : buyingPowerAvailable;
+      window.localStorage.setItem("portfoVal", portfoValue);
       return (
-        <div className="dashboard-outermost">
-          <NavBar 
+        <div className='dashboard-outermost'>
+          <NavBar
             currentUser={currentUser}
             // mergedData={mergedData}
             buyingPowerAvailable={buyingPowerAvailable}
             history={this.props.history}
             logout={this.props.logout}
             portfoValue={portfoValue}
-            />
-          <div className="dashboard-container">
-            <main className="main-container">
-              <div className="row">
-                <div className="left col-1">
-                  <section className="graph-section">
-                    <header className="asset-price">
-                    </header>
-                    <div className="react-chart">
+          />
+          <div className='dashboard-container'>
+            <main className='main-container'>
+              <div className='row'>
+                <div className='left col-1'>
+                  <section className='graph-section'>
+                    <header className='asset-price'></header>
+                    <div className='react-chart'>
                       <PortfoLineChart
                         data={this.state.historicalPortfo}
                         // data={this.mergeData("1D", portfoData, multIntraday, holdings)}
-                        className="stock-graph"
+                        className='stock-graph'
                       />
                     </div>
-                    <nav className="range">
-                      <div className="range-buttons">
-                        <div className="1D">
+                    <nav className='range'>
+                      <div className='range-buttons'>
+                        <div className='1D'>
                           <span>1D</span>
                         </div>
                         {/* <div className="1W">
@@ -163,8 +196,8 @@ class Dashboard extends React.Component {
                       </div>
                     </nav>
                   </section>
-                  <div className="dashboard-buying-p">
-                    <header className="buying-p-heading">
+                  <div className='dashboard-buying-p'>
+                    <header className='buying-p-heading'>
                       <div>
                         <span>Buying Power</span>
                         <span>
@@ -173,11 +206,11 @@ class Dashboard extends React.Component {
                       </div>
                     </header>
                   </div>
-                  <section className="asset-news-section">
-                    <header className="asset-news-heading">
-                      <div className="asset-news-div">
-                        <div className="asset-news-div-inner">
-                          <h2 className="asset-news-h2">
+                  <section className='asset-news-section'>
+                    <header className='asset-news-heading'>
+                      <div className='asset-news-div'>
+                        <div className='asset-news-div-inner'>
+                          <h2 className='asset-news-h2'>
                             <span>News</span>
                           </h2>
                         </div>
@@ -186,16 +219,21 @@ class Dashboard extends React.Component {
                     <div>
                       {assetNews.map((article, i) => {
                         return (
-                          <a href={article.url} className="article-link" key={i}>
-                            <div key={i} className="article">
-                              <div className="inner-news-content">
-                                <div className="title-side">
-                                  <div className="news-source">
+                          <a
+                            href={article.url}
+                            className='article-link'
+                            key={i}>
+                            <div key={i} className='article'>
+                              <div className='inner-news-content'>
+                                <div className='title-side'>
+                                  <div className='news-source'>
                                     <span>{article.source}</span>
-                                    <span className="time-since">{moment(article.datetime).fromNow()}</span>
+                                    <span className='time-since'>
+                                      {moment(article.datetime).fromNow()}
+                                    </span>
                                   </div>
-                                  <div className="news-title-and-more">
-                                    <h3 className="title-h3">
+                                  <div className='news-title-and-more'>
+                                    <h3 className='title-h3'>
                                       {article.headline}
                                     </h3>
                                     <div>
@@ -205,10 +243,10 @@ class Dashboard extends React.Component {
                                     </div>
                                   </div>
                                 </div>
-                                <div className="news-image">
+                                <div className='news-image'>
                                   <img
                                     src={article.image}
-                                    alt="image of news"
+                                    alt='image of news'
                                   />
                                 </div>
                               </div>
@@ -219,10 +257,10 @@ class Dashboard extends React.Component {
                     </div>
                   </section>
                 </div>
-                <div className="right col-2">
-                  <div className="watchlist-content">
-                    <div className="watchlist-card">
-                      <div className="actual-sidebar">
+                <div className='right col-2'>
+                  <div className='watchlist-content'>
+                    <div className='watchlist-card'>
+                      <div className='actual-sidebar'>
                         <WatchlistIndexContainer />
                       </div>
                     </div>
