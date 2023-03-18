@@ -3,7 +3,7 @@ require 'iex-ruby-client'
 class Api::UsersController < ApplicationController
     def create
         @current_user = current_user
-        rand_tickers = ["GOOGL", "FB", "GE", "AAPL", "NFLX", "ETSY"]
+        rand_tickers = ["GOOGL", "GE", "AAPL", "NFLX", "ETSY"]
         rand_sample = rand_tickers.sample
         @user = User.new(user_params)
         if @user.save
