@@ -10,8 +10,9 @@ export const receivePortfoData = (data, range) => {
   };
 };
 
-export const fetchPortfoData = (range="1D") => dispatch => {
-  return PortfoAPIUtil.fetchPortfoData(range="1D").then(data => {
-    return dispatch(receivePortfoData(data, range="1D"));
+export const fetchPortfoData = (range) => (dispatch) => {
+  const portfoRange = range || "1D";
+  return PortfoAPIUtil.fetchPortfoData(portfoRange).then((data) => {
+    return dispatch(receivePortfoData(data, portfoRange));
   });
 };

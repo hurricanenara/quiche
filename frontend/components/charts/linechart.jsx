@@ -51,7 +51,7 @@ class AssetLineChart extends React.Component {
         There was a problem fetching data from IEX Cloud. Please try again.
       </div>;
     }
-    debugger;
+
     return (
       <div className='stock-graph'>
         <div className='odometer'>
@@ -59,8 +59,8 @@ class AssetLineChart extends React.Component {
           <Odometer
             value={
               closePrice
-                ? closePrice.toFixed(2)
-                : this.state.closePrice.toFixed(2)
+                ? closePrice?.toFixed(2)
+                : this.state.closePrice?.toFixed(2)
             }
             format='(,ddd).dd'
           />

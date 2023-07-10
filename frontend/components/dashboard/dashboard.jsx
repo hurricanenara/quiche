@@ -71,6 +71,7 @@ class Dashboard extends React.Component {
     const tickersArr = Object.keys(tickers);
     if (range === "1W") range = "5DM";
     let range = e.target.textContent;
+
     if (!historicalBatch[range]) {
       fetchHistoricalBatch(tickersArr, range).then((res) => {
         this.setState({
@@ -78,6 +79,17 @@ class Dashboard extends React.Component {
         });
       });
     }
+  }
+
+  handlePortfoRangeClick(e) {
+    const { fetchPortfoData } = this.props;
+    const range = e.target.textContent;
+
+    fetchPortfoData(range).then((res) => {
+      this.setState({
+        historicalPortfo: res.data.data,
+      });
+    });
   }
 
   componentDidMount() {
@@ -150,6 +162,7 @@ class Dashboard extends React.Component {
         ? historicalPortfo[historicalPortfo.length - 1].cash_balance.toFixed(2)
         : buyingPowerAvailable;
       window.localStorage.setItem("portfoVal", portfoValue);
+
       return (
         <div className='dashboard-outermost'>
           <NavBar
@@ -178,21 +191,29 @@ class Dashboard extends React.Component {
                         <div className='1D'>
                           <span>1D</span>
                         </div>
-                        {/* <div className="1W">
-                          <span onClick={this.handleRangeClick}>1W</span>
+                        <div className='1W'>
+                          <span onClick={(e) => this.handlePortfoRangeClick(e)}>
+                            1W
+                          </span>
                         </div>
-                        <div className="1M">
-                          <span onClick={this.handleRangeClick}>1M</span>
+                        <div className='1M'>
+                          <span onClick={(e) => this.handlePortfoRangeClick(e)}>
+                            1M
+                          </span>
                         </div>
-                        <div className="3M">
-                          <span onClick={this.handleRangeClick}>3M</span>
+                        <div className='3M'>
+                          <span onClick={(e) => this.handlePortfoRangeClick(e)}>
+                            3M
+                          </span>
                         </div>
-                        <div className="1Y">
-                          <span onClick={this.handleRangeClick}>1Y</span>
+                        <div className='1Y'>
+                          <span onClick={(e) => this.handlePortfoRangeClick(e)}>
+                            1Y
+                          </span>
                         </div>
-                        <div className="5Y">
+                        <div className='5Y'>
                           <span>ALL</span>
-                        </div> */}
+                        </div>
                       </div>
                     </nav>
                   </section>
