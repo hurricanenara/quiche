@@ -49,5 +49,8 @@
   "bugs": {
     "url": "https://github.com/naracodes/fulltsack_clone/issues"
   },
-  "homepage": "https://github.com/naracodes/fulltsack_clone#readme"
+  "homepage": "https://github.com/naracodes/fulltsack_clone#readme",
+  "engines": {
+    "node": "14.x"
+  }
 }
